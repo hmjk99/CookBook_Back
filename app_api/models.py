@@ -3,15 +3,20 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=32, null=True)
     bio = models.CharField(max_length=128)
     image = models.ImageField()
 
+    def __str__(self):
+        return self.name
+
 
 class Recipe(models.Model):
-    instructions: models.TextField()
-    equipment: models.CharField(255)
-    ingredients: models.CharField(255)
-    # linking recipes to user models
-    recipes_id = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='recipes', null=True)
+    title = models.CharField(max_length=32, null=True)
+    instructions = models.TextField(null=True)
+    equipment = models.CharField(max_length=255, null=True)
+    ingredients = models.CharField(max_length=255, null=True)
+
+    def __str__(self):
+        return self.title
