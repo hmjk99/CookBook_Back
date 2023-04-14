@@ -24,12 +24,3 @@ class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Recipe.objects.all().order_by('id')
     serializer_class = RecipeSerializer
 
-def update_image(request, pk):
-    recipe = get_object_or_404(Recipe, pk=pk)
-    serializer = RecipeSerializer(recipe, data=request.data)
-    if serializer.is_valid():
-        if 'image' in request.data:
-            recipe.image.delete()
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
