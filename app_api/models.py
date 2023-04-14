@@ -19,7 +19,6 @@ class Recipe(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='recipes', null=True)
     title = models.CharField(max_length=32, null=True)
     image = models.ImageField(upload_to=upload_to, blank=True, null=True)
-    imageUrl = models.CharField(null=True)
     instructions = models.TextField(null=True)
     equipment = models.CharField(max_length=255, null=True)
     ingredients = models.CharField(max_length=255, null=True)
