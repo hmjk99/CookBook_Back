@@ -19,6 +19,12 @@ class UserRegister(APIView):
 		if serializer.is_valid(raise_exception=True):
 			user = serializer.create(clean_data)
 			if user:
+				user.name = clean_data.get('name')
+				user.bio = clean_data.get('bio')
+			if request.FILES.get('image'):
+				user.image = request.FILES.get('image')
+				user.save()
+			if user:
 				return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 
