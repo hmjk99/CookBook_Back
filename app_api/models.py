@@ -34,3 +34,10 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+class FavoriteRecipe(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='favorite_recipes')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='favorited_by')
+
+    def __str__(self):
+        return f"{self.user.username}'s favorite recipe: {self.recipe.title}"
