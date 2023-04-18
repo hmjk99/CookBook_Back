@@ -4,6 +4,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
+from rest_framework.generics import get_object_or_404
 from .serializers import UserProfileSerializer, UserRegisterSerializer, UserLoginSerializer, RecipeSerializer
 from .models import UserProfile
 from .models import Recipe
@@ -77,3 +78,26 @@ class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
 
 	queryset = Recipe.objects.all().order_by('id')
 	serializer_class = RecipeSerializer
+
+class FavoriteRecipe(APIView):
+	permission_classes = (permissions.IsAuthenticated)
+	authentication_classes = (SessionAuthentication)
+
+	def post(self, request, recipe_id):
+		recipe = get_object_or_404(Recipe, id=recipe_id)
+		favorite, created = FavoriteRecipe.objects.get_or_create(user=request.user, recipe=recipe)
+
+		if created:
+			return Response({'message': 'Recipe added to favorites'}, status=status.HTTP_201_CREATED)
+		else:
+			return Response({'message': 'Recipe already in favorites'})
+		
+	def delete(self, request, recipe_id):
+		recipe = get_object_or_404(Recipe, id=recipe_id)
+		try:
+			favorite = FavoriteRecipe.objects.get(user=request.user, recipe=recipe)
+		except FavoriteRecipe.DoesNotExist:
+			return Response({'message': 'Recipe not in favorites'}, status=status.HTTP_404_NOT_FOUND)
+		
+		favorite.delete()
+		return Response({'message': 'Recipe removed from favorites'}, status=status.HTTP_200_OK)

@@ -9,6 +9,7 @@ urlpatterns = [
 	path('api/logout', views.UserLogout.as_view(), name='logout'),
 	path('api/user', views.UserProfileList.as_view(), name='user'),
     path('api/user/<int:pk>', views.UserProfileDetail.as_view(), name='userprofile_detail'),
+    path('api/recipes/<int:recipe_id>/favorite', views.FavoriteRecipe.as_view(), name='favorite_recipe')
 ]
 
 # {
