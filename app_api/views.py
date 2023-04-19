@@ -65,15 +65,15 @@ class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserProfileSerializer
 
 class RecipeList(generics.ListCreateAPIView):
-	permission_classes = (permissions.IsAuthenticated,)
-	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.AllowAny,)
+	# authentication_classes = (SessionAuthentication,)
     
 	queryset = Recipe.objects.all().order_by('id')
 	serializer_class = RecipeSerializer
 
 class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
-	permission_classes = (permissions.IsAuthenticated,)
-	authentication_classes = (SessionAuthentication,)
+	permission_classes = (permissions.AllowAny,)
+	# authentication_classes = (SessionAuthentication,)
 
 	queryset = Recipe.objects.all().order_by('id')
 	serializer_class = RecipeSerializer

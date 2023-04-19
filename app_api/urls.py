@@ -15,6 +15,3 @@ urlpatterns = [
 #     "email":"test@example.com",
 #     "password":"testing123"
 # }
-
-# test@test.com
-# tester123
