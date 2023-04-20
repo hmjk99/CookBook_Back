@@ -29,7 +29,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', 'cookbook-group.herokuapp.com']
 
-
+SECURE_SSL_REDIRECT=True
 
 # Application definition
 
