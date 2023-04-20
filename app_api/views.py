@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
@@ -30,19 +32,32 @@ class UserRegister(APIView):
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserLogin(APIView):
-	permission_classes = (permissions.AllowAny,)
-	authentication_classes = [TokenAuthentication]
-	##
-	def post(self, request):
-		data = request.data
-		assert validate_email(data)
-		assert validate_password(data)
-		serializer = UserLoginSerializer(data=data)
-		if serializer.is_valid(raise_exception=True):
-			user = serializer.check_user(data)
-			login(request, user)
-			return Response(serializer.data, status=status.HTTP_200_OK)
+# class UserLogin(APIView):
+# 	permission_classes = (permissions.AllowAny,)
+# 	authentication_classes = [TokenAuthentication]
+# 	##
+# 	def post(self, request):
+# 		data = request.data
+# 		assert validate_email(data)
+# 		assert validate_password(data)
+# 		serializer = UserLoginSerializer(data=data)
+# 		if serializer.is_valid(raise_exception=True):
+# 			user = serializer.check_user(data)
+# 			login(request, user)
+# 			return Response(serializer.data, status=status.HTTP_200_OK)
+
+class UserLogin(ObtainAuthToken):
+    permission_classes = (permissions.AllowAny,)
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        assert validate_email(data)
+        assert validate_password(data)
+        serializer = self.serializer_class(data=data, context={'request': request})
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.validated_data['user']
+            login(request, user)
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key})
 
 
 class UserLogout(APIView):
