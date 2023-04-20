@@ -20,9 +20,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.Serializer):
 	email = serializers.EmailField()
 	password = serializers.CharField()
-	extra_kwargs = {
-        'username': {'required': False},
-    }
+        
+	username = serializers.CharField(required=False)
+
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['username'].required = False
 
 	##
 	def check_user(self, clean_data):
