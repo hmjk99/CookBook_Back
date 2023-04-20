@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-fl48^x74tim(nd5xykl3+v1hd*s1g6h6vb74(2ohhlw%ojyj31'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', 'cookbook-group.herokuapp.com']
 
@@ -65,6 +65,9 @@ CORS_ALLOWED_ORIGINS = [
 
 
 CORS_ALLOW_CREDENTIALS = True
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 ROOT_URLCONF = 'recipe_app_back.urls'
 
