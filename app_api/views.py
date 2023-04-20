@@ -53,7 +53,7 @@ class UserLogout(APIView):
 
 
 class UserProfileList(generics.ListCreateAPIView):
-	permission_classes = (permissions.IsAuthenticated,)
+	permission_classes = (permissions.AllowAny,)
 	authentication_classes = (SessionAuthentication,)
 	serializer_class = UserProfileSerializer
 
@@ -61,6 +61,7 @@ class UserProfileList(generics.ListCreateAPIView):
 		return UserProfile.objects.filter(pk=self.request.user.pk)
 
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
     queryset = UserProfile.objects.all().order_by('id')
     serializer_class = UserProfileSerializer
 
