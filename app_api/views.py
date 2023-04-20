@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -59,7 +60,8 @@ class UserLogin(APIView):
             user = authenticate(request=request, username=email, password=serializer.validated_data['password'])
             if user:
                 login(request, user)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                token, created = Token.objects.get_or_create(user=user)
+                return Response({'token': token.key}, status=status.HTTP_200_OK)
             else:
                 return Response({'error': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
 
