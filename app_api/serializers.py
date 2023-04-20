@@ -18,21 +18,23 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 		return user_obj
 
 class UserLoginSerializer(serializers.Serializer):
-	email = serializers.EmailField()
-	password = serializers.CharField()
-        
-	username = serializers.CharField(required=False)
+    email = serializers.EmailField()
+    password = serializers.CharField()
 
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
-		self.fields['username'].required = False
+    def validate(self, data):
+        """
+        Check that the input data contains only `email` and `password` fields.
+        """
+        if set(data.keys()) != set(['email', 'password']):
+            raise serializers.ValidationError("Invalid fields.")
+        return data
 
-	##
-	def check_user(self, clean_data):
-		user = authenticate(username=clean_data['email'], password=clean_data['password'])
-		if not user:
-			raise ValidationError('user not found')
-		return user
+    def check_user(self, clean_data):
+        user = authenticate(username=clean_data['email'], password=clean_data['password'])
+        if not user:
+            raise ValidationError('user not found')
+        return user
+
 	
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
