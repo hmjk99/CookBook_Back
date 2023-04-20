@@ -163,4 +163,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR,  'static/images')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = [ "http://localhost:3000"]
+CSRF_TRUSTED_ORIGINS = [ "http://localhost:3000", 'cookbook-group.herokuapp.com']
