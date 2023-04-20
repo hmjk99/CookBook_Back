@@ -58,6 +58,7 @@ class UserProfileList(generics.ListCreateAPIView):
 	serializer_class = UserProfileSerializer
 
 	def get_queryset(self):
+		print(self.request.user.pk)
 		return UserProfile.objects.filter(pk=self.request.user.pk)
 
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
