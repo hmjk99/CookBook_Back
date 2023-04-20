@@ -1,7 +1,5 @@
 from django.urls import path
 from . import views
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
 
 urlpatterns = [
     path('api/recipes', views.RecipeList.as_view(), name='recipe_list'),

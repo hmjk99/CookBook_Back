@@ -1,9 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics
@@ -32,38 +29,19 @@ class UserRegister(APIView):
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-# class UserLogin(APIView):
-# 	permission_classes = (permissions.AllowAny,)
-# 	authentication_classes = [TokenAuthentication]
-# 	##
-# 	def post(self, request):
-# 		data = request.data
-# 		assert validate_email(data)
-# 		assert validate_password(data)
-# 		serializer = UserLoginSerializer(data=data)
-# 		if serializer.is_valid(raise_exception=True):
-# 			user = serializer.check_user(data)
-# 			login(request, user)
-# 			return Response(serializer.data, status=status.HTTP_200_OK)
-
 class UserLogin(APIView):
-    permission_classes = (permissions.AllowAny,)
-    authentication_classes = [TokenAuthentication]
-    
-    def post(self, request):
-        data = request.data
-        assert validate_email(data)
-        assert validate_password(data) 
-        serializer = UserLoginSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            email = serializer.validated_data['email']
-            user = authenticate(request=request, username=email, password=serializer.validated_data['password'])
-            if user:
-                login(request, user)
-                token, created = Token.objects.get_or_create(user=user)
-                return Response({'token': token.key}, status=status.HTTP_200_OK)
-            else:
-                return Response({'error': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
+	permission_classes = (permissions.AllowAny,)
+	authentication_classes = (SessionAuthentication,)
+	##
+	def post(self, request):
+		data = request.data
+		assert validate_email(data)
+		assert validate_password(data)
+		serializer = UserLoginSerializer(data=data)
+		if serializer.is_valid(raise_exception=True):
+			user = serializer.check_user(data)
+			login(request, user)
+			return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserLogout(APIView):
@@ -75,18 +53,16 @@ class UserLogout(APIView):
 
 
 class UserProfileList(generics.ListCreateAPIView):
-	authentication_classes = [TokenAuthentication]
-	permission_classes = [IsAuthenticated]
+	permission_classes = (permissions.AllowAny,)
+	# authentication_classes = (SessionAuthentication,)
 	serializer_class = UserProfileSerializer
 
 	def get_queryset(self):
 		return UserProfile.objects.filter(pk=self.request.user.pk)
 
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
-	authentication_classes = [TokenAuthentication]
-	permission_classes = [IsAuthenticated]
-	queryset = UserProfile.objects.all().order_by('id')
-	serializer_class = UserProfileSerializer
+    queryset = UserProfile.objects.all().order_by('id')
+    serializer_class = UserProfileSerializer
 
 class RecipeList(generics.ListCreateAPIView):
 	permission_classes = (permissions.AllowAny,)

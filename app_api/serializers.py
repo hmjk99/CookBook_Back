@@ -17,41 +17,15 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 		user_obj.save()
 		return user_obj
 
-# class UserLoginSerializer(serializers.Serializer):
-#     email = serializers.EmailField()
-#     password = serializers.CharField()
-
-#     def validate(self, data):
-#         """
-#         Check that the input data contains only `email` and `password` fields.
-#         """
-#         if set(data.keys()) != set(['email', 'password']):
-#             raise serializers.ValidationError("Invalid fields.")
-#         return data
-
-#     def check_user(self, clean_data):
-#         user = authenticate(username=clean_data['email'], password=clean_data['password'])
-#         if not user:
-#             raise ValidationError('user not found')
-#         return user
-
 class UserLoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField()
-
-    def validate(self, data):
-        """
-        Check that the input data contains only `email` and `password` fields.
-        """
-        if set(data.keys()) != set(['email', 'password']):
-            raise serializers.ValidationError("Invalid fields.")
-        return data
-
-    def validate_email(self, value):
-        user = authenticate(username=value, password=self.initial_data['password'])
-        if not user:
-            raise serializers.ValidationError("Invalid email or password.")
-        return value
+	email = serializers.EmailField()
+	password = serializers.CharField()
+	##
+	def check_user(self, clean_data):
+		user = authenticate(username=clean_data['email'], password=clean_data['password'])
+		if not user:
+			raise ValidationError('user not found')
+		return user
 	
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
