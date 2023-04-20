@@ -8,7 +8,6 @@ from .serializers import UserProfileSerializer, UserRegisterSerializer, UserLogi
 from .models import UserProfile
 from .models import Recipe
 from rest_framework import permissions, status
-from rest_framework.permissions import IsAdminUser
 from .validations import custom_validation, validate_email, validate_password
 
 # Create your views here.
@@ -54,7 +53,7 @@ class UserLogout(APIView):
 
 
 class UserProfileList(generics.ListCreateAPIView):
-	permission_classes = (permissions.IsAuthenticated, IsAdminUser)
+	permission_classes = (permissions.IsAuthenticated,)
 	authentication_classes = (SessionAuthentication,)
 	serializer_class = UserProfileSerializer
 
