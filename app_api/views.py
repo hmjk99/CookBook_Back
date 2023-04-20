@@ -9,10 +9,8 @@ from .models import UserProfile
 from .models import Recipe
 from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
-from django.views.decorators.csrf import csrf_protect
 
 # Create your views here.
-@csrf_protect
 class UserRegister(APIView):
 	permission_classes = (permissions.AllowAny,)
 	def post(self, request):
@@ -30,7 +28,7 @@ class UserRegister(APIView):
 				return Response(serializer.data, status=status.HTTP_201_CREATED)
 		return Response(status=status.HTTP_400_BAD_REQUEST)
 
-@csrf_protect
+
 class UserLogin(APIView):
 	permission_classes = (permissions.AllowAny,)
 	authentication_classes = (SessionAuthentication,)
@@ -45,7 +43,7 @@ class UserLogin(APIView):
 			login(request, user)
 			return Response(serializer.data, status=status.HTTP_200_OK)
 
-@csrf_protect
+
 class UserLogout(APIView):
 	permission_classes = (permissions.AllowAny,)
 	authentication_classes = ()
@@ -53,7 +51,7 @@ class UserLogout(APIView):
 		logout(request)
 		return Response(status=status.HTTP_200_OK)
 
-@csrf_protect
+
 class UserProfileList(generics.ListCreateAPIView):
 	permission_classes = (permissions.IsAuthenticated,)
 	authentication_classes = (SessionAuthentication,)
@@ -61,13 +59,11 @@ class UserProfileList(generics.ListCreateAPIView):
 
 	def get_queryset(self):
 		return UserProfile.objects.filter(pk=self.request.user.pk)
-	
-@csrf_protect
+
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all().order_by('id')
     serializer_class = UserProfileSerializer
-    
-@csrf_protect
+
 class RecipeList(generics.ListCreateAPIView):
 	permission_classes = (permissions.AllowAny,)
 	# authentication_classes = (SessionAuthentication,)
@@ -75,7 +71,6 @@ class RecipeList(generics.ListCreateAPIView):
 	queryset = Recipe.objects.all().order_by('id')
 	serializer_class = RecipeSerializer
 
-@csrf_protect
 class RecipeDetail(generics.RetrieveUpdateDestroyAPIView):
 	permission_classes = (permissions.AllowAny,)
 	# authentication_classes = (SessionAuthentication,)
