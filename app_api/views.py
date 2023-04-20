@@ -46,18 +46,23 @@ class UserRegister(APIView):
 # 			login(request, user)
 # 			return Response(serializer.data, status=status.HTTP_200_OK)
 
-class UserLogin(ObtainAuthToken):
+class UserLogin(APIView):
     permission_classes = (permissions.AllowAny,)
-    def post(self, request, *args, **kwargs):
+    authentication_classes = [TokenAuthentication]
+    
+    def post(self, request):
         data = request.data
         assert validate_email(data)
-        assert validate_password(data)
-        serializer = self.serializer_class(data=data, context={'request': request})
+        assert validate_password(data) 
+        serializer = UserLoginSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
-            user = serializer.validated_data['user']
-            login(request, user)
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key})
+            email = serializer.validated_data['email']
+            user = authenticate(request=request, username=email, password=serializer.validated_data['password'])
+            if user:
+                login(request, user)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response({'error': 'Invalid email or password'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserLogout(APIView):
