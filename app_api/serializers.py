@@ -56,7 +56,7 @@ class UserLoginSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields= ('id', 'email', 'username', 'password', 'name', 'bio', 'image')
+        fields= ('id', 'email', 'token', 'username', 'password', 'name', 'bio', 'image')
 
 class RecipeSerializer(serializers.ModelSerializer):
     user_profile = UserProfileSerializer(read_only=True)
