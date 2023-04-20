@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -32,7 +32,7 @@ class UserRegister(APIView):
 
 class UserLogin(APIView):
 	permission_classes = (permissions.AllowAny,)
-	authentication_classes = (SessionAuthentication,)
+	authentication_classes = [TokenAuthentication]
 	##
 	def post(self, request):
 		data = request.data
@@ -54,7 +54,7 @@ class UserLogout(APIView):
 
 
 class UserProfileList(generics.ListCreateAPIView):
-	authentication_classes = [SessionAuthentication]
+	authentication_classes = [TokenAuthentication]
 	permission_classes = [IsAuthenticated]
 	serializer_class = UserProfileSerializer
 
@@ -62,7 +62,7 @@ class UserProfileList(generics.ListCreateAPIView):
 		return UserProfile.objects.filter(pk=self.request.user.pk)
 
 class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
-	authentication_classes = [SessionAuthentication]
+	authentication_classes = [TokenAuthentication]
 	permission_classes = [IsAuthenticated]
 	queryset = UserProfile.objects.all().order_by('id')
 	serializer_class = UserProfileSerializer

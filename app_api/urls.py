@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 
 urlpatterns = [
     path('api/recipes', views.RecipeList.as_view(), name='recipe_list'),
@@ -9,6 +11,7 @@ urlpatterns = [
 	path('api/logout', views.UserLogout.as_view(), name='logout'),
 	path('api/user', views.UserProfileList.as_view(), name='user'),
     path('api/user/<int:pk>', views.UserProfileDetail.as_view(), name='userprofile_detail'),
+    path('api/token/', ObtainAuthToken.as_view()),
 ]
 
 # {
