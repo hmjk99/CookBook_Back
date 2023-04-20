@@ -53,8 +53,8 @@ class UserLogout(APIView):
 
 
 class UserProfileList(generics.ListCreateAPIView):
-	permission_classes = (permissions.IsAuthenticated,)
-	authentication_classes = (SessionAuthentication,)
+	# permission_classes = (permissions.IsAuthenticated,)
+	# authentication_classes = (SessionAuthentication,)
 	serializer_class = UserProfileSerializer
 
 	def get_queryset(self):
