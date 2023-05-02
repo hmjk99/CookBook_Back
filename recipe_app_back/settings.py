@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-fl48^x74tim(nd5xykl3+v1hd*s1g6h6vb74(2ohhlw%ojyj31
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', 'cookbook-group.herokuapp.com', 'cook-book-front.vercel.app']
+ALLOWED_HOSTS = ['*']
 
 SECURE_SSL_REDIRECT=True
 
